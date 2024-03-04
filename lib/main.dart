@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/onboarding/onboarding_view.dart';
+import 'package:testing/screens/HomeScreen.dart';
 import 'package:testing/screens/WelcomeScreen.dart';
 
 void main() async {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: onboarding? const WelcomeScreen() : const OnboardingView(),
+      home: onboarding? const HomeScreen() : const HomeScreen(),
     );
   }
 }

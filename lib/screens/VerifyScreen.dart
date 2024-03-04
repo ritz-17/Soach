@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import 'package:testing/screens/Formscreen.dart';
-import 'package:testing/screens/RegisterScreen.dart';
+import 'package:testing/screens/HomeScreen.dart';
 import 'package:testing/widget/CustomButton.dart';
+import 'package:dio/dio.dart';
+
 
 class VerifyScreen extends StatefulWidget {
-  const VerifyScreen({super.key});
+  final String? phone;
+  const VerifyScreen({Key? key, @required this.phone}) : super(key: key);
 
   @override
   State<VerifyScreen> createState() => _VerifyScreenState();
@@ -13,6 +16,35 @@ class VerifyScreen extends StatefulWidget {
 
 class _VerifyScreenState extends State<VerifyScreen> {
   String? otpCode;
+
+  Future<void> verifyOTP(BuildContext context) async {
+    try {
+      Dio dio = Dio();
+      Response response = await dio.post(
+        'https://vgfa-backend.onrender.com/api/auth/verify',
+        data: {
+          "phone": widget.phone,
+          "otp": otpCode,
+        },
+      );
+
+      print(response.data); // For debugging, you can remove this later
+
+      // Access 'type' property accordingly
+      if (response.data['type'] == "success") {
+        // Navigate to the home screen if verification is successful
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        // Handle failure cases if necessary
+      }
+    } catch (e) {
+      print(e.toString()); // Print any errors for debugging
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,28 +95,30 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                Pinput(
-                  length: 6,
-                  showCursor: true,
-                  defaultPinTheme: PinTheme(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.green.shade200,
+                Expanded(
+                  child: Pinput(
+                    length: 6,
+                    showCursor: true,
+                    defaultPinTheme: PinTheme(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.green.shade200,
+                        ),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    onCompleted: (value) {
+                      setState(() {
+                        otpCode = value;
+                      });
+                    },
                   ),
-                  onCompleted: (value) {
-                    setState(() {
-                      otpCode = value;
-                    });
-                  },
                 ),
                 const SizedBox(height: 25),
                 SizedBox(
@@ -92,13 +126,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   height: 50,
                   child: CustomButton(
                     text: "Verify",
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=>  const FormScreen()
-                      ),
-                      );
-                    },
+                    onPressed: () => verifyOTP(context),
                   ),
+
                 ),
                 const SizedBox(height: 20),
                 const Text(

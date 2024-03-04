@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:testing/screens/LoginScreen.dart';
-import 'package:testing/screens/RegisterScreen.dart';
+import 'package:testing/screens/HomeScreen.dart';
+import 'package:testing/screens/Register_Screen.dart';
+import 'package:testing/screens/Login_Screen.dart';
 import 'package:testing/widget/CustomButton.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -50,18 +51,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   child: CustomButton(
                     onPressed: (){
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=>  RegisterScreen()
+                          builder: (context)=>  HomeScreen()
                       ),
                       );
                     },
-                    text: "Login",
+                    text: "Get Started",
                   ),
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(
-                        builder: (context)=>  LoginScreen()
+                        builder: (context)=>  Login_Screen()
                     ),
                     );
                   },
